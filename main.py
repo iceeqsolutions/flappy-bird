@@ -17,6 +17,37 @@ roadImg = pygame.image.load("road.jpg")
 roadImgScroll = 0
 scrollSpeed = 5
 
+# Sprite classes
+class GameCharacter(pygame.sprite.Sprite):
+    def __init__ (self, x, y):
+        pygame.sprite.Sprite.__init__(self) # allows to iherit from the sprite class
+        self.images = []
+        self.index = 0
+        self.counter = 0 # controls the speed of the animation
+        for num in range(1, 5):
+            img = pygame.image.load(f"bird{num}sm.png")
+            self.images.append(img)
+            # print(f"bird{num}sm.png")
+        self.image = self.images[self.index]
+        self.rect = self.image.get_rect()
+        self.rect.center = [x, y]
+
+    def update(self):
+        # handle the animation
+        self.counter += 1
+        wingFlapPause = 5
+        if self.counter > wingFlapPause:
+            self.counter = 0
+            self.index += 1
+            if self.index >= len(self.images):
+                self.index = 0
+            self.image = self.images[self.index]
+
+flappyGroup = pygame.sprite.Group()
+flappyBird = GameCharacter(150, int(height / 2))
+flappyGroup.add(flappyBird)
+
+
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Flappy Clone")
 
@@ -26,6 +57,8 @@ while run:
     screen.blit(backgroundImg, (0, 0))
     screen.blit(roadImg, (roadImgScroll, 530))
     roadImgScroll -= scrollSpeed # pos moving from right to left
+    flappyGroup.draw(screen)
+    flappyGroup.update()
     if abs(roadImgScroll) > 200:
         roadImgScroll = 0
     for event in pygame.event.get():
