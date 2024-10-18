@@ -50,15 +50,18 @@ flappyGroup.add(flappyBird)
 
 # The wooden logs
 class WoodenLog(pygame.sprite.Sprite):
-    def __init__(self, x, y):
+    def __init__(self, x, y, orientation):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("woodenlog.png")
         self.rect = self.image.get_rect()
         self.rect.topleft = [x, y]
+        # orientation 1 is top, -1 is bottom
+        if orientation == 1:
+            self.image = pygame.transform.flip(self.image, False, True) # flip on the x-axis = False, flip on the y-axis = True
 
 woodenLogGroup = pygame.sprite.Group()
-woodenLogTop = WoodenLog(300, 0)
-woodenLogBottom = WoodenLog(300, height - 360)
+woodenLogTop = WoodenLog(300, 0, 0)
+woodenLogBottom = WoodenLog(300, height - 360, 1)
 woodenLogGroup.add(woodenLogTop)
 woodenLogGroup.add(woodenLogBottom)
 
