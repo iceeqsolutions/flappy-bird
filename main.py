@@ -17,6 +17,8 @@ roadImg = pygame.image.load("road.jpg")
 # Game variables
 roadImgScroll = 0
 scrollSpeed = 5
+addLogFrequency = 1000
+previousLog = 0
 
 # SPRITE CLASSES
 # The Bird
@@ -60,12 +62,12 @@ class WoodenLog(pygame.sprite.Sprite):
         if orientation == 1:
             self.image = pygame.transform.flip(self.image, False, True) # flip on the x-axis = False, flip on the y-axis = True
 
+    def update(self):
+        self.rect.x -= scrollSpeed
+        if self.rect.right < 0:
+            self.kill()
+
 woodenLogGroup = pygame.sprite.Group()
-logPlacement = random.randint(-200, 0)
-woodenLogTop = WoodenLog(300, logPlacement, 0)
-woodenLogBottom = WoodenLog(300, logPlacement + 420, 1)
-woodenLogGroup.add(woodenLogTop)
-woodenLogGroup.add(woodenLogBottom)
 
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Flappy Clone")
@@ -77,8 +79,20 @@ while run:
 
     flappyGroup.draw(screen)
     flappyGroup.update()
+    
+    currentTime = pygame.time.get_ticks()
+    if currentTime > previousLog + addLogFrequency:
+        previousLog = currentTime
+        logPlacement = random.randint(-200, 0)
+        woodenLogTop = WoodenLog(width, logPlacement, 0)
+        woodenLogBottom = WoodenLog(width, logPlacement + 420, 1)
+        woodenLogGroup.add(woodenLogTop)
+        woodenLogGroup.add(woodenLogBottom)
+    
     woodenLogGroup.draw(screen)
     woodenLogGroup.update()
+    
+    
     if abs(roadImgScroll) > 200:
         roadImgScroll = 0
     for event in pygame.event.get():
