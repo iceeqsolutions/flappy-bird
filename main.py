@@ -1,5 +1,6 @@
 import pygame
 from pygame.locals import *
+import random
 
 pygame.init()
 
@@ -55,13 +56,14 @@ class WoodenLog(pygame.sprite.Sprite):
         self.image = pygame.image.load("woodenlog.png")
         self.rect = self.image.get_rect()
         self.rect.topleft = [x, y]
-        # orientation 1 is top, -1 is bottom
+        # orientation 0 is top, 1 is bottom
         if orientation == 1:
             self.image = pygame.transform.flip(self.image, False, True) # flip on the x-axis = False, flip on the y-axis = True
 
 woodenLogGroup = pygame.sprite.Group()
-woodenLogTop = WoodenLog(300, 0, 0)
-woodenLogBottom = WoodenLog(300, height - 360, 1)
+logPlacement = random.randint(-200, 0)
+woodenLogTop = WoodenLog(300, logPlacement, 0)
+woodenLogBottom = WoodenLog(300, logPlacement + 420, 1)
 woodenLogGroup.add(woodenLogTop)
 woodenLogGroup.add(woodenLogBottom)
 
@@ -72,8 +74,7 @@ run = True
 while run:
     clock.tick(fps)
     screen.blit(backgroundImg, (0, 0))
-    screen.blit(roadImg, (roadImgScroll, 530))
-    roadImgScroll -= scrollSpeed # pos moving from right to left
+
     flappyGroup.draw(screen)
     flappyGroup.update()
     woodenLogGroup.draw(screen)
@@ -83,6 +84,9 @@ while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
+
+    screen.blit(roadImg, (roadImgScroll, 530))
+    roadImgScroll -= scrollSpeed # pos moving from right to left
 
     pygame.display.flip()
 
