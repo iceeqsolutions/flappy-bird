@@ -49,11 +49,11 @@ class GameCharacter(pygame.sprite.Sprite):
             self.image = self.images[self.index]
         
         # handle the gravity
-        if self.gravity < 12.5:
+        if self.rect.bottom < 540:
             self.gravity += 0.5
             self.rect.y += self.gravity
         else:
-            self.gravity = 12.5
+            self.gravity = 10
 
         
         # handle the increase in height
