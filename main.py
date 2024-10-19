@@ -38,7 +38,7 @@ class GameCharacter(pygame.sprite.Sprite):
         self.gravity = 0
 
     def update(self):
-        # handle the wing flapping
+        # handle the wing movement
         self.counter += 1
         wingFlapPause = 5
         if self.counter > wingFlapPause:
@@ -54,6 +54,16 @@ class GameCharacter(pygame.sprite.Sprite):
             self.rect.y += self.gravity
         else:
             self.gravity = 12.5
+
+        
+        # handle the increase in height
+        mouseKeyPressed = False
+        if pygame.mouse.get_pressed()[0] == 1 and mouseKeyPressed == False:
+            mouseKeyPressed = True
+            if self.rect.top < 0:
+                self.gravity = 0
+            else:
+                self.gravity = -10
 
 flappyGroup = pygame.sprite.Group()
 flappyBird = GameCharacter(150, int(height / 2))
