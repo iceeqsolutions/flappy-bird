@@ -43,7 +43,16 @@ class GameCharacter(pygame.sprite.Sprite):
         self.mouseKeyPressed = False
 
     def update(self):
-        if startGame == True:
+        if startGame == True:            
+            # handle the gravity
+            if self.rect.bottom < 540:
+                self.gravity += 0.5
+                self.rect.y += self.gravity
+            else:
+                self.gravity = 10
+            # print(self.gravity)
+
+        if gameOver == False:
             # handle the wing movement
             self.counter += 1
             wingFlapPause = 5
@@ -53,15 +62,7 @@ class GameCharacter(pygame.sprite.Sprite):
                 if self.index >= len(self.images):
                     self.index = 0
                 self.image = self.images[self.index]
-            
-            # handle the gravity
-            if self.rect.bottom < 540:
-                self.gravity += 0.5
-                self.rect.y += self.gravity
-            else:
-                self.gravity = 10
-            # print(self.gravity)
-            
+
             # handle the increase in height
             if pygame.mouse.get_pressed()[0] == 1 and self.mouseKeyPressed == False:
                 self.mouseKeyPressed = True
@@ -74,7 +75,7 @@ class GameCharacter(pygame.sprite.Sprite):
 
             # handle bird wiggle during flight
             self.image = pygame.transform.rotate(self.images[self.index], self.gravity * -2)
-        if gameOver == True:
+        else:
             self.image = pygame.transform.rotate(self.images[self.index], -90)
 
 flappyGroup = pygame.sprite.Group()
@@ -126,7 +127,7 @@ while run:
         if flappyGroup.sprites()[0].rect.left > woodenLogGroup.sprites()[0].rect.right and passedObstacle == True:
             passedObstacle = False
             gameScore += 1
-    print(gameScore)
+    # print(gameScore)
 
     # Check for Game Over
     if pygame.sprite.groupcollide(flappyGroup, woodenLogGroup, False, False):
