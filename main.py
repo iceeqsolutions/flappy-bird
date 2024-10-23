@@ -15,6 +15,7 @@ backgroundImg = pygame.image.load("background.jpg")
 roadImg = pygame.image.load("road.jpg")
 
 # Game variables
+startGame = False
 roadImgScroll = 0
 scrollSpeed = 5
 addLogFrequency = 1000
@@ -39,37 +40,38 @@ class GameCharacter(pygame.sprite.Sprite):
         self.mouseKeyPressed = False
 
     def update(self):
-        # handle the wing movement
-        self.counter += 1
-        wingFlapPause = 5
-        if self.counter > wingFlapPause:
-            self.counter = 0
-            self.index += 1
-            if self.index >= len(self.images):
-                self.index = 0
-            self.image = self.images[self.index]
-        
-        # handle the gravity
-        if self.rect.bottom < 540:
-            self.gravity += 0.5
-            self.rect.y += self.gravity
-        else:
-            self.gravity = 10
-        # print(self.gravity)
-        
-        # handle the increase in height
-        if pygame.mouse.get_pressed()[0] == 1 and self.mouseKeyPressed == False:
-            self.mouseKeyPressed = True
-            if self.rect.top > 0:
-                self.gravity = -7
+        if startGame == True:
+            # handle the wing movement
+            self.counter += 1
+            wingFlapPause = 5
+            if self.counter > wingFlapPause:
+                self.counter = 0
+                self.index += 1
+                if self.index >= len(self.images):
+                    self.index = 0
+                self.image = self.images[self.index]
+            
+            # handle the gravity
+            if self.rect.bottom < 540:
+                self.gravity += 0.5
+                self.rect.y += self.gravity
             else:
-                self.gravity = 0
-        if pygame.mouse.get_pressed()[0] == 0 and self.mouseKeyPressed == True:
-            self.mouseKeyPressed = False
+                self.gravity = 10
+            # print(self.gravity)
+            
+            # handle the increase in height
+            if pygame.mouse.get_pressed()[0] == 1 and self.mouseKeyPressed == False:
+                self.mouseKeyPressed = True
+                if self.rect.top > 0:
+                    self.gravity = -7
+                else:
+                    self.gravity = 0
+            if pygame.mouse.get_pressed()[0] == 0 and self.mouseKeyPressed == True:
+                self.mouseKeyPressed = False
 
-        # handle bird wiggle during flight
-        self.image = pygame.transform.rotate(self.images[self.index], self.gravity * -2)
-        
+            # handle bird wiggle during flight
+            self.image = pygame.transform.rotate(self.images[self.index], self.gravity * -2)
+
 flappyGroup = pygame.sprite.Group()
 flappyBird = GameCharacter(150, int(height / 2))
 flappyGroup.add(flappyBird)
@@ -86,9 +88,10 @@ class WoodenLog(pygame.sprite.Sprite):
             self.image = pygame.transform.flip(self.image, False, True) # flip on the x-axis = False, flip on the y-axis = True
 
     def update(self):
-        self.rect.x -= scrollSpeed
-        if self.rect.right < 0:
-            self.kill()
+        if startGame == True:
+            self.rect.x -= scrollSpeed
+            if self.rect.right < 0:
+                self.kill()
 
 woodenLogGroup = pygame.sprite.Group()
 
@@ -102,15 +105,22 @@ while run:
 
     flappyGroup.draw(screen)
     flappyGroup.update()
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            run = False
+        if event.type == pygame.MOUSEBUTTONDOWN and startGame == False:
+            startGame = True
     
-    currentTime = pygame.time.get_ticks()
-    if currentTime > previousLog + addLogFrequency:
-        previousLog = currentTime
-        logPlacement = random.randint(-200, 0)
-        woodenLogTop = WoodenLog(width, logPlacement, 0)
-        woodenLogBottom = WoodenLog(width, logPlacement + 420, 1)
-        woodenLogGroup.add(woodenLogTop)
-        woodenLogGroup.add(woodenLogBottom)
+    if startGame == True:
+        currentTime = pygame.time.get_ticks()
+        if currentTime > previousLog + addLogFrequency:
+            previousLog = currentTime
+            logPlacement = random.randint(-200, 0)
+            woodenLogTop = WoodenLog(width, logPlacement, 0)
+            woodenLogBottom = WoodenLog(width, logPlacement + 420, 1)
+            woodenLogGroup.add(woodenLogTop)
+            woodenLogGroup.add(woodenLogBottom)
     
     woodenLogGroup.draw(screen)
     woodenLogGroup.update()
@@ -118,12 +128,15 @@ while run:
     
     if abs(roadImgScroll) > 200:
         roadImgScroll = 0
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            run = False
-
+    # for event in pygame.event.get():
+    #     if event.type == pygame.QUIT:
+    #         run = False
+    #     if event.type == pygame.MOUSEBUTTONDOWN and startGame == False:
+    #         startGame = True
+    
     screen.blit(roadImg, (roadImgScroll, 530))
-    roadImgScroll -= scrollSpeed # pos moving from right to left
+    if startGame == True:
+        roadImgScroll -= scrollSpeed # pos moving from right to left
 
     pygame.display.flip()
 
