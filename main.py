@@ -12,6 +12,7 @@ fps = 60
 width = 800
 height = 700
 backgroundImg = pygame.image.load("background.jpg")
+restartButtonImg = pygame.image.load("restartButton.png")
 roadImg = pygame.image.load("road.jpg")
 white = (255, 255, 255)
 orange = (255, 202, 24)
@@ -115,6 +116,18 @@ woodenLogGroup = pygame.sprite.Group()
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Flappy Clone")
 
+class Button():
+    def __init__ (self, x, y, image):
+        self.image = image
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+
+    def draw(self):
+        screen.blit(self.image, (self.rect.x, self.rect.y))
+
+# Create a button instance
+restartButton = Button(width // 2 - 130, 340, restartButtonImg)
+
 run = True
 while run:
     clock.tick(fps)
@@ -149,6 +162,7 @@ while run:
         gameOver = True
         startGame = False
         createText('Game Over', font, orange, 200, 200)
+        restartButton.draw()
 
     if startGame == True:
         currentTime = pygame.time.get_ticks()
