@@ -17,6 +17,8 @@ roadImg = pygame.image.load("road.jpg")
 # Game variables
 startGame = False
 gameOver = False
+gameScore = 0
+passedObstacle = False
 roadImgScroll = 0
 scrollSpeed = 5
 addLogFrequency = 1000
@@ -108,6 +110,8 @@ while run:
 
     flappyGroup.draw(screen)
     flappyGroup.update()
+    woodenLogGroup.draw(screen)
+    woodenLogGroup.update()
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -115,6 +119,15 @@ while run:
         if event.type == pygame.MOUSEBUTTONDOWN and startGame == False and gameOver == False:
             startGame = True
     
+    # Check game score
+    if len(woodenLogGroup) > 0:
+        if flappyGroup.sprites()[0].rect.left > woodenLogGroup.sprites()[0].rect.left and flappyGroup.sprites()[0].rect.left < woodenLogGroup.sprites()[0].rect.right and passedObstacle == False:
+            passedObstacle = True
+        if flappyGroup.sprites()[0].rect.left > woodenLogGroup.sprites()[0].rect.right and passedObstacle == True:
+            passedObstacle = False
+            gameScore += 1
+    print(gameScore)
+
     # Check for Game Over
     if pygame.sprite.groupcollide(flappyGroup, woodenLogGroup, False, False):
         gameOver = True 
@@ -132,10 +145,7 @@ while run:
             woodenLogBottom = WoodenLog(width, logPlacement + 420, 1)
             woodenLogGroup.add(woodenLogTop)
             woodenLogGroup.add(woodenLogBottom)
-    
-    woodenLogGroup.draw(screen)
-    woodenLogGroup.update()
-     
+         
     if abs(roadImgScroll) > 200:
         roadImgScroll = 0
     
