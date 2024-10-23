@@ -16,6 +16,7 @@ roadImg = pygame.image.load("road.jpg")
 
 # Game variables
 startGame = False
+gameOver = False
 roadImgScroll = 0
 scrollSpeed = 5
 addLogFrequency = 1000
@@ -109,9 +110,14 @@ while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
-        if event.type == pygame.MOUSEBUTTONDOWN and startGame == False:
+        if event.type == pygame.MOUSEBUTTONDOWN and startGame == False and gameOver == False:
             startGame = True
     
+    # Check for Game Over
+    if flappyBird.rect.bottom > 540:
+        gameOver = True
+        startGame = False
+
     if startGame == True:
         currentTime = pygame.time.get_ticks()
         if currentTime > previousLog + addLogFrequency:
@@ -124,15 +130,9 @@ while run:
     
     woodenLogGroup.draw(screen)
     woodenLogGroup.update()
-    
-    
+     
     if abs(roadImgScroll) > 200:
         roadImgScroll = 0
-    # for event in pygame.event.get():
-    #     if event.type == pygame.QUIT:
-    #         run = False
-    #     if event.type == pygame.MOUSEBUTTONDOWN and startGame == False:
-    #         startGame = True
     
     screen.blit(roadImg, (roadImgScroll, 530))
     if startGame == True:
