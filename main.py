@@ -55,10 +55,9 @@ class GameCharacter(pygame.sprite.Sprite):
             self.rect.y += self.gravity
         else:
             self.gravity = 10
-        print(self.gravity)
+        # print(self.gravity)
         
         # handle the increase in height
-        # mouseKeyPressed = False
         if pygame.mouse.get_pressed()[0] == 1 and self.mouseKeyPressed == False:
             self.mouseKeyPressed = True
             if self.rect.top > 0:
@@ -68,6 +67,9 @@ class GameCharacter(pygame.sprite.Sprite):
         if pygame.mouse.get_pressed()[0] == 0 and self.mouseKeyPressed == True:
             self.mouseKeyPressed = False
 
+        # handle bird wiggle during flight
+        self.image = pygame.transform.rotate(self.images[self.index], self.gravity * -2)
+        
 flappyGroup = pygame.sprite.Group()
 flappyBird = GameCharacter(150, int(height / 2))
 flappyGroup.add(flappyBird)
