@@ -13,6 +13,9 @@ width = 800
 height = 700
 backgroundImg = pygame.image.load("background.jpg")
 roadImg = pygame.image.load("road.jpg")
+white = (255, 255, 255)
+orange = (255, 202, 24)
+font = pygame.font.SysFont('Snap ITC', 70)
 
 # Game variables
 startGame = False
@@ -24,7 +27,15 @@ scrollSpeed = 5
 addLogFrequency = 1000
 previousLog = 0
 
+
 # SPRITE CLASSES
+
+# Create Game Text
+def createText(text, font, color, x, y):
+    displayText = font.render(text, True, color)
+    screen.blit(displayText, (x, y))
+
+
 # The Bird
 class GameCharacter(pygame.sprite.Sprite):
     def __init__ (self, x, y):
@@ -128,6 +139,7 @@ while run:
             passedObstacle = False
             gameScore += 1
     # print(gameScore)
+    createText(str(gameScore), font, white, width // 2, 50)
 
     # Check for Game Over
     if pygame.sprite.groupcollide(flappyGroup, woodenLogGroup, False, False):
@@ -136,6 +148,7 @@ while run:
     if  flappyBird.rect.bottom >= 540:
         gameOver = True
         startGame = False
+        createText('Game Over', font, orange, 200, 200)
 
     if startGame == True:
         currentTime = pygame.time.get_ticks()
