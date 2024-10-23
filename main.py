@@ -72,6 +72,8 @@ class GameCharacter(pygame.sprite.Sprite):
 
             # handle bird wiggle during flight
             self.image = pygame.transform.rotate(self.images[self.index], self.gravity * -2)
+        if gameOver == True:
+            self.image = pygame.transform.rotate(self.images[self.index], -90)
 
 flappyGroup = pygame.sprite.Group()
 flappyBird = GameCharacter(150, int(height / 2))
@@ -114,7 +116,10 @@ while run:
             startGame = True
     
     # Check for Game Over
-    if flappyBird.rect.bottom > 540:
+    if pygame.sprite.groupcollide(flappyGroup, woodenLogGroup, False, False):
+        gameOver = True 
+        # startGame = False # this will stop the game with the bird in mid-air, therefore removed
+    if  flappyBird.rect.bottom >= 540:
         gameOver = True
         startGame = False
 
