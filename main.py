@@ -36,6 +36,15 @@ def createText(text, font, color, x, y):
     displayText = font.render(text, True, color)
     screen.blit(displayText, (x, y))
 
+# Game Restart
+def restartGame():
+    gameScore = 0
+    flappyBird.rect.center = (150, int(height / 2))
+    flappyBird.gravity = 0
+    flappyBird.mouseKeyPressed = False
+    woodenLogGroup.empty()
+    return gameScore
+
 # The Bird
 class GameCharacter(pygame.sprite.Sprite):
     def __init__ (self, x, y):
@@ -176,11 +185,8 @@ while run:
         if restartButton.draw() == True:
             gameOver = False
             startGame = False
-            gameScore = 0
-            flappyBird.rect.center = (150, int(height / 2))
-            flappyBird.gravity = 0
-            flappyBird.mouseKeyPressed = False
-            woodenLogGroup.empty()
+            gameScore = restartGame()
+            
 
     if startGame == True:
         currentTime = pygame.time.get_ticks()
