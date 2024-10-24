@@ -29,13 +29,12 @@ addLogFrequency = 1000
 previousLog = 0
 
 
-# SPRITE CLASSES
+# FUNCTIONS AND SPRITE CLASSES
 
 # Create Game Text
 def createText(text, font, color, x, y):
     displayText = font.render(text, True, color)
     screen.blit(displayText, (x, y))
-
 
 # The Bird
 class GameCharacter(pygame.sprite.Sprite):
@@ -116,6 +115,7 @@ woodenLogGroup = pygame.sprite.Group()
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Flappy Clone")
 
+# The Restart Button
 class Button():
     def __init__ (self, x, y, image):
         self.image = image
@@ -123,7 +123,17 @@ class Button():
         self.rect.topleft = (x, y)
 
     def draw(self):
+        action = False
+        # Check for mouseover
+        mousePosition = pygame.mouse.get_pos()
+        # print(mousePosition)
+        if self.rect.collidepoint(mousePosition):
+            if pygame.mouse.get_pressed()[0] == 1:
+                action = True
+        
+        # Draw the button
         screen.blit(self.image, (self.rect.x, self.rect.y))
+        return action
 
 # Create a button instance
 restartButton = Button(width // 2 - 130, 340, restartButtonImg)
@@ -163,6 +173,14 @@ while run:
         startGame = False
         createText('Game Over', font, orange, 200, 200)
         restartButton.draw()
+        if restartButton.draw() == True:
+            gameOver = False
+            startGame = False
+            gameScore = 0
+            flappyBird.rect.center = (150, int(height / 2))
+            flappyBird.gravity = 0
+            flappyBird.mouseKeyPressed = False
+            woodenLogGroup.empty()
 
     if startGame == True:
         currentTime = pygame.time.get_ticks()
