@@ -194,7 +194,7 @@ while run:
             previousLog = currentTime
             logPlacement = random.randint(-200, 0)
             woodenLogTop = WoodenLog(width, logPlacement, 0)
-            woodenLogBottom = WoodenLog(width, logPlacement + 420, 1)
+            woodenLogBottom = WoodenLog(width, logPlacement + 450, 1)
             woodenLogGroup.add(woodenLogTop)
             woodenLogGroup.add(woodenLogBottom)
          
