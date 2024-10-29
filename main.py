@@ -11,9 +11,9 @@ fps = 60
 # Game canvas variables
 width = 800
 height = 700
-backgroundImg = pygame.image.load("background.jpg")
-restartButtonImg = pygame.image.load("restartButton.png")
-roadImg = pygame.image.load("road.jpg")
+backgroundImg = pygame.image.load("./images/background.jpg")
+restartButtonImg = pygame.image.load("./images/restartButton.png")
+roadImg = pygame.image.load("./images/road.jpg")
 white = (255, 255, 255)
 orange = (255, 202, 24)
 font = pygame.font.SysFont('Snap ITC', 70)
@@ -53,7 +53,7 @@ class GameCharacter(pygame.sprite.Sprite):
         self.index = 0
         self.counter = 0 # controls the speed of the animation
         for num in range(1, 5):
-            img = pygame.image.load(f"bird{num}sm.png")
+            img = pygame.image.load(f"./images/bird{num}sm.png")
             self.images.append(img)
             # print(f"bird{num}sm.png")
         self.image = self.images[self.index]
@@ -106,7 +106,7 @@ flappyGroup.add(flappyBird)
 class WoodenLog(pygame.sprite.Sprite):
     def __init__(self, x, y, orientation):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("woodenlog.png")
+        self.image = pygame.image.load("./images/woodenlog.png")
         self.rect = self.image.get_rect()
         self.rect.topleft = [x, y]
         # orientation 0 is top, 1 is bottom
